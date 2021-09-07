@@ -7,6 +7,6 @@ main()
 
 	nc = 0;
 	while (getchar() != EOF)
-		++nc;
+	  ++nc;
 	printf("%ld\n", nc);
 }
