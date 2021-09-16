@@ -1,6 +1,6 @@
 #include <stdio.h>
-    
-void showbits( unsigned int x )
+//change to unsigned orig.    
+void showbits( signed int x )
 {
     int i=0;
     for (i = (sizeof(int) * 8) - 1; i >= 0; i--)
@@ -12,7 +12,7 @@ void showbits( unsigned int x )
 
 int main( void )
 {
-    int j = 5225;
+    int j = -5225;
     printf("%d in binary \t\t ", j);
     /* assume we have a function that prints a binary string when given 
        a decimal integer 

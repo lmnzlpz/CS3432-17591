@@ -28,15 +28,30 @@ bool non_delim_character(char c ){
    space-separated word.
 */
 char *word_start(char* str){
+  while(delim_character(*str))
+    str++;
+  return str;
 }
 
 /* Returns a pointer to the first space character of the zero
    terminated string.
 */
-char *end_word(char* str){}
+char *end_word(char* str){
+  while(non_delim_character(*str))
+    str++;
+  return str;
+}
 
 /* counts the number of words or tokens*/
-int count_tokens(char* str){}
+int count_tokens(char* str){
+  int count = 0;
+  while(*str != '\0'){
+    if (delim_character(*str))
+      count++;
+    str++;
+  }
+  return count;
+}
 
 /* Returns a freshly allocated zero-terminated vector of freshly 
    allocated space-seperated tokens from zero-terminated str.
@@ -46,9 +61,27 @@ int count_tokens(char* str){}
      tokens[2] = "string"
      tokens[3] = 0
 */
-char *copy_str(char *inStr, short len){}
+char *copy_str(char *inStr, short len){
+  char *copy = (char*)malloc((len+1)+sizeof(char));
+  for (int i = 0; i < len; i++)
+    *(copy+i) = *(inStr+i);
+  *(copy+len) = '\0';
+  return copy;
+}
 
-char** tokenize(char* str){}
+char** tokenize(char* str){
+  int count = count_tokens(str);
+  char **arrayOfPointers = (char**)malloc((count+1)+sizeof(char*));
+  char *end;
+  char *start = word_start(str);
+  for (int i = 0; i < count; i++){
+    end = end_word(start);
+    *(arrayOfPointers+i) = copy_str(start, (end-start));
+    start = word_start(end);
+  }
+  *(arrayOfPointers+count) = NULL;
+  return arrayOfPointers;
+}
 
 void print_all_tokens(char** tokens){}
 
