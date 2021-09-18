@@ -50,6 +50,7 @@ int count_tokens(char* str){
       count++;
     str++;
   }
+  count++; // accounts for the terminator.
   return count;
 }
 
@@ -83,10 +84,25 @@ char** tokenize(char* str){
   return arrayOfPointers;
 }
 
-void print_all_tokens(char** tokens){}
+void print_all_tokens(char** tokens){
+  for (int i = 0; *tokens != '\0'; i++){
+    printf("Tokens[%d]: %s\n", i, *tokens);
+    *tokens++;
+  }
+}
 
 int main(){
-  tokenize("Hello there");
+  char input[100]; // User input can only be 100 chars long.
+  char **pointerStorage;
+  printf("Type 'x' to quit.\n");
+  while(1){
+    printf("Input: ");
+    fgets(input, sizeof(input), stdin);
+    if (*input=='x'){break;}
+    pointerStorage = tokenize(input);
+    print_all_tokens(pointerStorage);
+    printf("\n");
+  }
 }
 
 
