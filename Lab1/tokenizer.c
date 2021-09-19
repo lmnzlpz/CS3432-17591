@@ -63,7 +63,7 @@ int count_tokens(char* str){
      tokens[3] = 0
 */
 char *copy_str(char *inStr, short len){
-  char *copy = (char*)malloc((len+1)+sizeof(char));
+  char *copy = (char*)malloc((len+1)*sizeof(char));
   for (int i = 0; i < len; i++)
     *(copy+i) = *(inStr+i);
   *(copy+len) = '\0';
@@ -72,7 +72,7 @@ char *copy_str(char *inStr, short len){
 
 char** tokenize(char* str){
   int count = count_tokens(str);
-  char **arrayOfPointers = (char**)malloc((count+1)+sizeof(char*));
+  char **arrayOfPointers = (char**)malloc((count+1)*sizeof(char*));
   char *end;
   char *start = word_start(str);
   for (int i = 0; i < count; i++){
