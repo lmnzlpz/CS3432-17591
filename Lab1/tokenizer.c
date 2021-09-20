@@ -48,7 +48,7 @@ int count_tokens(char* str){
   while(*str != '\0'){
     if (delim_character(*str))
       count++;
-    str++;
+    str++; // moves pointer along the str array.
   }
   count++; // accounts for the terminator.
   return count;
@@ -63,7 +63,8 @@ int count_tokens(char* str){
      tokens[3] = 0
 */
 char *copy_str(char *inStr, short len){
-  char *copy = (char*)malloc((len+1)*sizeof(char));
+  /*Allocates enough memory for an array of chars the size of inStr*/
+  char *copy = (char*)malloc((len)*sizeof(char)); 
   for (int i = 0; i < len; i++)
     *(copy+i) = *(inStr+i);
   *(copy+len) = '\0';
@@ -72,15 +73,16 @@ char *copy_str(char *inStr, short len){
 
 char** tokenize(char* str){
   int count = count_tokens(str);
-  char **arrayOfPointers = (char**)malloc((count+1)*sizeof(char*));
+  /*Allocates enough memory for an array containing pointers to other arrays.*/
+  char **arrayOfPointers = (char**)malloc((count)*sizeof(char*));
   char *end;
   char *start = word_start(str);
   for (int i = 0; i < count; i++){
     end = end_word(start);
-    *(arrayOfPointers+i) = copy_str(start, (end-start));
+    *(arrayOfPointers+i) = copy_str(start, (end-start)); //end-start finds the offset for the token
     start = word_start(end);
   }
-  *(arrayOfPointers+count) = NULL;
+  *(arrayOfPointers+count) = NULL; // makes the last item in arrayOfPointers = NULL.
   return arrayOfPointers;
 }
 
