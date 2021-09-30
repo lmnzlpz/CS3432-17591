@@ -75,6 +75,7 @@ char** tokenize(char* str){
   int count = count_tokens(str);
   /*Allocates enough memory for an array containing pointers to other arrays.*/
   char **arrayOfPointers = (char**)malloc((count)*sizeof(char*));
+  printf("%d", count);
   char *end;
   char *start = word_start(str);
   for (int i = 0; i < count; i++){
