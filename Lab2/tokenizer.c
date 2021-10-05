@@ -6,8 +6,8 @@
    ('\t', ' ').
    Zero terminators are not printable (therefor false).
  */
-bool delim_character (char c){
-  if (c == '\t' || c ==' ')
+bool delim_character (char c, const char delim){
+  if (c == '\t' || c == delim)
     return true;
   else
     return false;
@@ -17,8 +17,8 @@ bool delim_character (char c){
    (not tab or space). Zero terminators are not printable
    (therefore false).
 */
-bool non_delim_character(char c ){
-  if (c == '\t' || c == ' ' || c == '\0')
+bool non_delim_character(char c, const char delim){
+  if (c == '\t' || c == '\0' || c == delim)
     return false;
   else
     return true;
@@ -27,8 +27,8 @@ bool non_delim_character(char c ){
 /* Returns a pointer to the first character of the next
    space-separated word.
 */
-char *word_start(char* str){
-  while(delim_character(*str))
+char *word_start(char* str, const char delim){
+  while(delim_character(*str, delim))
     str++;
   return str;
 }
@@ -36,17 +36,17 @@ char *word_start(char* str){
 /* Returns a pointer to the first space character of the zero
    terminated string.
 */
-char *end_word(char* str){
-  while(non_delim_character(*str))
+char *end_word(char* str, const char delim){
+  while(non_delim_character(*str, delim))
     str++;
   return str;
 }
 
 /* counts the number of words or tokens*/
-int count_tokens(char* str){
+int count_tokens(char* str, const char delim){
   int count = 0;
   while(*str != '\0'){
-    if (delim_character(*str))
+    if (delim_character(*str, delim))
       count++;
     str++; // moves pointer along the str array.
   }
@@ -71,17 +71,16 @@ char *copy_str(char *inStr, short len){
   return copy;
 }
 
-char** tokenize(char* str){
-  int count = count_tokens(str);
+char** tokenize(char* str, const char delim){
+  int count = count_tokens(str, delim);
   /*Allocates enough memory for an array containing pointers to other arrays.*/
   char **arrayOfPointers = (char**)malloc((count)*sizeof(char*));
-  printf("%d", count);
   char *end;
-  char *start = word_start(str);
+  char *start = word_start(str, delim);
   for (int i = 0; i < count; i++){
-    end = end_word(start);
+    end = end_word(start, delim);
     *(arrayOfPointers+i) = copy_str(start, (end-start)); //end-start finds the offset for the token
-    start = word_start(end);
+    start = word_start(end, delim);
   }
   *(arrayOfPointers+count) = NULL; // makes the last item in arrayOfPointers = NULL.
   return arrayOfPointers;
@@ -93,20 +92,3 @@ void print_all_tokens(char** tokens){
     *tokens++;
   }
 }
-
-int main(){
-  char input[100]; // User input can only be 100 chars long.
-  char **pointerStorage;
-  printf("Type 'x' to quit.\n");
-  while(1){
-    printf("Input: ");
-    fgets(input, sizeof(input), stdin);
-    if (*input=='x'){break;}
-    pointerStorage = tokenize(input);
-    print_all_tokens(pointerStorage);
-    printf("\n");
-  }
-}
-
-
-  

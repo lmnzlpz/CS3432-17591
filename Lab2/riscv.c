@@ -31,7 +31,7 @@ void init_regs(){
  * as a parameter to this function.
  */
 bool interpret(char* instr){
-	return true;
+  return true;
 }
 
 
@@ -63,8 +63,23 @@ int main(){
 	// Do not write any code between init_regs
 	init_regs(); // DO NOT REMOVE THIS LINE
 
+	char input[100]; // User input can only be 100 chars long.
+	char **pointerStorage;
+	printf("Press 'x' to quit.\n");
+	while(1){
+	  printf("Input: ");
+	  fgets(input, sizeof(input), stdin);
+	  if (*input=='x'){break;}
+	  int count = count_tokens(input, ' ');
+	  pointerStorage = tokenize(input, ' ');
+	  print_all_tokens(pointerStorage);
+	  for (int i = 0; i < count; i++){
+	    interpret(pointerStorage+i);
+	  }
+	  printf("\n");
+	}
 	// Below is a sample program to a write-read. Overwrite this with your own code.
-	write_read_demo();
+	//write_read_demo();
 
 	return 0;
 }
