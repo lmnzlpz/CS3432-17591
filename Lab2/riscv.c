@@ -13,6 +13,17 @@ void write_read_demo();
 bool areSame(char* str1, char* str2);
 int initialCaseHandler(char* str);
 int findRegNum(char* str);
+void print_regs();
+
+void print_regs(){
+  int col_size = 10;
+  for (int i = 0; i < 8; i++){
+    printf("X%02i:%.*lld", i, col_size, (long long int) reg[i]);
+    printf("X%02i:%.*lld", i+8, col_size, (long long int) reg[i+8]);
+    printf("X%02i:%.*lld", i+16, col_size, (long long int) reg[i+16]);
+    printf("X%02i:%.*lld", i+24, col_size, (long long int) reg[i+24]);
+  }
+}
 
 int findRegNum(char* str){
   int count = 0;
@@ -84,6 +95,7 @@ void init_regs(){
  * as a parameter to this function.
  */
 bool interpret(char* instr){
+  char* textFile = "mem.txt";
   char **pointerStorage;
   pointerStorage = tokenize(instr, ' ');
   print_all_tokens(pointerStorage);
@@ -91,6 +103,17 @@ bool interpret(char* instr){
   switch(caseNum){
   case 0:
     printf("LW read");
+    char* saveToLW = *(pointerStorage+1);
+    int saveToLWint = findRegNum(saveToLW);
+    char** memoryTokensLW = tokenize(*(pointerStorage+2), '('); // splits the main 3rd token in 2.
+    char** cleanMemoryLW = tokenize(*(memoryTokensLW+1),')'); // cleans the mem token to only reg.
+
+    char* memoryRegLW = (*cleanMemoryLW);
+    int memoryRegLWint = findRegNum(memoryRegLW);
+
+    int32_t addressLW = atoi(*(memoryTokensLW+0)) + reg[memoryRegLWint];
+    int32_t read = read_address(addressLW, textFile);
+    reg[saveToLWint] = read;
     break;
   case 1:
     printf("SW read");
@@ -105,12 +128,19 @@ bool interpret(char* instr){
     int firstReg = findRegNum(firstOperand);
     int secReg = findRegNum(secondOperand);
 
-    printf("\n%d\n", saveToReg);
-    printf("\n%d\n", firstReg);
-    printf("%d", secReg);
+    reg[saveToReg] = reg[firstReg] + reg[secReg];
+    printf("%d", reg[saveToReg]);
     break;
   case 3:
     printf("ADDI read");
+    char* saveToADDI = *(pointerStorage+1);
+    char* addTo = *(pointerStorage+2);
+    int add = atoi(*(pointerStorage+3));
+
+    int saveToADDIint = findRegNum(saveToADDI);
+    int addToint = findRegNum(addTo);
+
+    reg[saveToADDIint] = reg[addToint] + add;
     break;
   case 4:
     printf("AND read");
@@ -135,8 +165,8 @@ bool interpret(char* instr){
  * Use 0x before an int in C to hardcode it as text, but you may enter base 10 as you see fit.
  */
 void write_read_demo(){
-	int32_t data_to_write = 0xFFF; // equal to 4095
-	int32_t address = 0x98; // equal to 152
+        int32_t data_to_write = 12;// 0xFFF; // equal to 4095//
+	int32_t address =396;// 0x98; // equal to 152//
 	char* mem_file = "mem.txt";
 
 	// Write 4095 (or "0000000 00000FFF") in the 20th address (address 152 == 0x98)
@@ -144,6 +174,8 @@ void write_read_demo(){
 	if(write == (int32_t) NULL)
 		printf("ERROR: Unsucessful write to address %0X\n", 0x40);
 	int32_t read = read_address(address, mem_file);
+	reg[31] = read;
+	printf("\n%d\nw", reg[31]);
 
 	printf("Read address %lu (0x%lX): %lu (0x%lX)\n", address, address, read, read); // %lu -> format as an long-unsigned
 }
@@ -161,12 +193,14 @@ int main(){
 	while(1){
 	  printf("Input: ");
 	  fgets(input, sizeof(input), stdin);
-	  if (*input=='x'){break;}
+	  if (*input == 'x'){break;}
 	  interpret(input);
 	  printf("\n");
 	}
+	print_regs();
 	// Below is a sample program to a write-read. Overwrite this with your own code.
 	write_read_demo();
+	print_regs();
 
 	return 0;
 }
