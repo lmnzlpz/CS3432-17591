@@ -12,6 +12,22 @@ bool interpret(char* instr);
 void write_read_demo();
 bool areSame(char* str1, char* str2);
 int initialCaseHandler(char* str);
+int findRegNum(char* str);
+
+int findRegNum(char* str){
+  int count = 0;
+  char num[2];
+  while(*(str+count)!='\0'){
+    count++;
+  }
+  if (count >= 3){ //accounting for the last token to have an extra NULL at the end.
+    num[0] = *(str+1); num[1] = *(str+2);
+  }
+  else
+    num[0] = *(str+1);
+
+  return  atoi(num);
+}
 
 int initialCaseHandler(char* str){
   if (areSame(str, "LW")) {return 0;}
@@ -37,8 +53,7 @@ bool areSame(char* str1, char* str2){
   while (*(temp2+count2) != '\0'){
     count2++;
   }
-  printf("%d || %d\n", count1, count2);
-  if (count1-1 != count2){return false;}
+  if (count1 != count2){return false;}
   
   int i = 0;
   while (*(str1+i) != '\0' && *(str2+i) != '\0'){
@@ -72,7 +87,7 @@ bool interpret(char* instr){
   char **pointerStorage;
   pointerStorage = tokenize(instr, ' ');
   print_all_tokens(pointerStorage);
-  int caseNum = initialCaseHandler(*pointerStorage);
+  int caseNum = initialCaseHandler(pointerStorage[0]);
   switch(caseNum){
   case 0:
     printf("LW read");
@@ -82,6 +97,17 @@ bool interpret(char* instr){
     break;
   case 2:
     printf("ADD read");
+    char* saveTo = *(pointerStorage+1);
+    char* firstOperand = *(pointerStorage+2);
+    char* secondOperand = *(pointerStorage+3);
+
+    int saveToReg = findRegNum(saveTo);
+    int firstReg = findRegNum(firstOperand);
+    int secReg = findRegNum(secondOperand);
+
+    printf("\n%d\n", saveToReg);
+    printf("\n%d\n", firstReg);
+    printf("%d", secReg);
     break;
   case 3:
     printf("ADDI read");

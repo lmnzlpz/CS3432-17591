@@ -74,7 +74,7 @@ char *copy_str(char *inStr, short len){
 char** tokenize(char* str, const char delim){
   int count = count_tokens(str, delim);
   /*Allocates enough memory for an array containing pointers to other arrays.*/
-  char **arrayOfPointers = (char**)malloc((count)*sizeof(char*));
+  char **arrayOfPointers = (char**)malloc((count+1)*sizeof(char*));
   char *end;
   char *start = word_start(str, delim);
   for (int i = 0; i < count; i++){
@@ -82,7 +82,7 @@ char** tokenize(char* str, const char delim){
     *(arrayOfPointers+i) = copy_str(start, (end-start)); //end-start finds the offset for the token
     start = word_start(end, delim);
   }
-  *(arrayOfPointers+count) = NULL; // makes the last item in arrayOfPointers = NULL.
+  *(arrayOfPointers+(count+1)) = NULL; // makes the last item in arrayOfPointers = NULL.
   return arrayOfPointers;
 }
 
