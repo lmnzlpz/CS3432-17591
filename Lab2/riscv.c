@@ -111,7 +111,7 @@ bool interpret(char* instr){
     char* memoryRegLW = (*cleanMemoryLW);
     int memoryRegLWint = findRegNum(memoryRegLW);
 
-    int32_t addressLW = atoi(*(memoryTokensLW+0)) + reg[memoryRegLWint];
+    int32_t addressLW = atoi(*(memoryTokensLW+0)) + memoryRegLWint;
     int32_t readLW = read_address(addressLW, textFile);
     reg[saveToLWint] = readLW;
     break;
@@ -125,7 +125,7 @@ bool interpret(char* instr){
     int memoryRegSWint = findRegNum(memoryRegSW);
     
     int32_t data_to_writeSW = reg[saveFromSWint];
-    int32_t addressSW = atoi(*(memoryTokensSW+0)) + reg[memoryRegSWint]; 
+    int32_t addressSW = atoi(*(memoryTokensSW+0)) + memoryRegSWint; 
     int32_t write = write_address(data_to_writeSW, addressSW, textFile);
     
     break;
