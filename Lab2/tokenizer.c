@@ -77,17 +77,18 @@ char** tokenize(char* str, const char delim){
   char **arrayOfPointers = (char**)malloc((count+1)*sizeof(char*));
   char *end;
   char *start = word_start(str, delim);
-  for (int i = 0; i < count; i++){
+  int i;
+  for (i = 0; i < count; i++){
     end = end_word(start, delim);
-    *(arrayOfPointers+i) = copy_str(start, (end-start)); //end-start finds the offset for the token
+    arrayOfPointers[i] = copy_str(start, (end-start)); //end-start finds the offset for the token
     start = word_start(end, delim);
   }
-  *(arrayOfPointers+(count+1)) = NULL; // makes the last item in arrayOfPointers = NULL.
+  arrayOfPointers[i] = NULL; // makes the last item in arrayOfPointers = NULL.
   return arrayOfPointers;
 }
 
 void print_all_tokens(char** tokens){
-  for (int i = 0; *tokens != '\0'; i++){
+  for (int i = 0; *tokens; i++){
     printf("Tokens[%d]: %s\n", i, *tokens);
     *tokens++;
   }

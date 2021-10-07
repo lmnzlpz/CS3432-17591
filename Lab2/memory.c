@@ -38,7 +38,7 @@ int32_t read_address(int32_t address, char* file_name){
 		}
 		line++;
 	}while(!done_searching);
- free(str);
+	free(str);
 	// Convert "786F2EAB53FB439A" and turn into int64_t
 	sscanf(hex_str, "%X", (unsigned int*) &return_data);
 	fclose(mem_file);
