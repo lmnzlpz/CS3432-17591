@@ -112,11 +112,22 @@ bool interpret(char* instr){
     int memoryRegLWint = findRegNum(memoryRegLW);
 
     int32_t addressLW = atoi(*(memoryTokensLW+0)) + reg[memoryRegLWint];
-    int32_t read = read_address(addressLW, textFile);
-    reg[saveToLWint] = read;
+    int32_t readLW = read_address(addressLW, textFile);
+    reg[saveToLWint] = readLW;
     break;
   case 1:
     printf("SW read");
+    char* saveFromSW = *(pointerStorage+1);
+    int saveFromSWint = findRegNum(saveFromSW);
+    char** memoryTokensSW = tokenize(*(pointerStorage+2), '(');
+    char** cleanMemorySW = tokenize(*(memoryTokensSW+1), ')');
+    char* memoryRegSW = (*cleanMemorySW);
+    int memoryRegSWint = findRegNum(memoryRegSW);
+    
+    int32_t data_to_writeSW = reg[saveFromSWint];
+    int32_t addressSW = atoi(*(memoryTokensSW+0)) + reg[memoryRegSWint]; 
+    int32_t write = write_address(data_to_writeSW, addressSW, textFile);
+    
     break;
   case 2:
     printf("ADD read");
