@@ -25,7 +25,9 @@ void print_regs(){
   }
 }
 
-int findRegNum(char* str){
+/*Receives register format strings and return the int value of the register.
+For example, "X13" -> 13*/
+int findRegNum(char* str){ 
   int count = 0;
   char num[2];
   while(*(str+count)!='\0'){
@@ -98,8 +100,8 @@ bool interpret(char* instr){
   char* textFile = "mem.txt";
   char **pointerStorage;
   pointerStorage = tokenize(instr, ' ');
-  print_all_tokens(pointerStorage);
-  int caseNum = initialCaseHandler(pointerStorage[0]);
+  //print_all_tokens(pointerStorage); use for debugging purposes.
+  int caseNum = initialCaseHandler(pointerStorage[0]); // decides what case the instruction is.
   switch(caseNum){
   case 0:
     printf("LW read");
@@ -113,7 +115,7 @@ bool interpret(char* instr){
 
     int32_t addressLW = atoi(*memoryTokensLW) + memoryRegLWint;
     int32_t readLW = read_address(addressLW, textFile);
-    reg[saveToLWint] = readLW;
+    reg[saveToLWint] = readLW; // register is given whatever was read in addressLW
     break;
   case 1:
     printf("SW read");
@@ -155,40 +157,45 @@ bool interpret(char* instr){
     break;
   case 4:
     printf("AND read");
+    char* saveToAnd = *(pointerStorage+1);
+    char* firstOperandAnd = *(pointerStorage+2);
+    char* secondOperandAnd = *(pointerStorage+3);
+
+    int saveToRegAnd = findRegNum(saveToAnd);
+    int firstRegAnd = findRegNum(firstOperandAnd);
+    int secRegAnd = findRegNum(secondOperandAnd);
+
+    reg[saveToRegAnd] = reg[firstRegAnd] & reg[secRegAnd];
     break;
   case 5:
     printf("OR read");
+    char* saveToOr = *(pointerStorage+1);
+    char* firstOperandOr = *(pointerStorage+2);
+    char* secondOperandOr = *(pointerStorage+3);
+
+    int saveToRegOr = findRegNum(saveToOr);
+    int firstRegOr = findRegNum(firstOperandOr);
+    int secRegOr = findRegNum(secondOperandOr);
+
+    reg[saveToRegOr] = reg[firstRegOr] | reg[secRegOr];
     break;
   case 6:
     printf("XOR read");
+    char* saveToXor = *(pointerStorage+1);
+    char* firstOperandXor = *(pointerStorage+2);
+    char* secondOperandXor = *(pointerStorage+3);
+
+    int saveToRegXor = findRegNum(saveToXor);
+    int firstRegXor = findRegNum(firstOperandXor);
+    int secRegXor = findRegNum(secondOperandXor);
+
+    reg[saveToRegXor] = reg[firstRegXor] ^ reg[secRegXor];
     break;
   default:
     printf("ERROR");
     return false;
   }
   return true;
-}
-
-/**
- * Simple demo program to show the usage of read_address() and write_address() found in memory.c
- * Before and after running this program, look at mem.txt to see how the values change.
- * Feel free to change "data_to_write" and "address" variables to see how these affect mem.txt
- * Use 0x before an int in C to hardcode it as text, but you may enter base 10 as you see fit.
- */
-void write_read_demo(){
-        int32_t data_to_write = 12;// 0xFFF; // equal to 4095//
-	int32_t address =396;// 0x98; // equal to 152//
-	char* mem_file = "mem.txt";
-
-	// Write 4095 (or "0000000 00000FFF") in the 20th address (address 152 == 0x98)
-	int32_t write = write_address(data_to_write, address, mem_file);
-	if(write == (int32_t) NULL)
-		printf("ERROR: Unsucessful write to address %0X\n", 0x40);
-	int32_t read = read_address(address, mem_file);
-	reg[31] = read;
-	printf("\n%d\nw", reg[31]);
-
-	printf("Read address %lu (0x%lX): %lu (0x%lX)\n", address, address, read, read); // %lu -> format as an long-unsigned
 }
 
 /**
@@ -208,9 +215,6 @@ int main(){
 	  interpret(input);
 	  printf("\n");
 	}
-	print_regs();
-	// Below is a sample program to a write-read. Overwrite this with your own code.
-	write_read_demo();
 	print_regs();
 
 	return 0;
