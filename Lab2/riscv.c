@@ -207,6 +207,8 @@ int main(){
 	init_regs(); // DO NOT REMOVE THIS LINE
 
 	char input[1000]; // User input can only be 100 chars long.
+	printf("Please use spaces to seperate arguments, e.g. ADD X10 X13 X12\n");
+	printf("Note: Enter all numeric values in base 10.\n");
 	printf("Enter 'x' to quit.\n");
 	while(1){
 	  printf("Input: ");
